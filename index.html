@@ -49,6 +49,7 @@ tbody tr:hover{background:#eaf2ff}
 ul.l{list-style:none;padding:0;margin:0}
 ul.l li{display:flex;gap:6px;align-items:flex-start;padding:6px 8px;background:#f6f9ff;border-left:4px solid var(--b2);border-radius:6px;margin-bottom:6px;animation:up .5s both}
 .pr{background:#fff3f3;border-left-color:var(--bad)!important}
+.addf{display:flex;gap:8px;margin-top:10px;padding:10px;background:#f0f6ff;border:1px dashed var(--b2);border-radius:10px;animation:up .5s both}.addf input{background:#fff;border:1px solid var(--ln)}.addf input:first-child{flex:3}.addf input+input{flex:1}.addf button{white-space:nowrap;background:var(--ok)}@media(max-width:560px){.addf{flex-wrap:wrap}}
 .tag{width:150px;flex:none;font-size:12px;color:#fff;background:#e07b13;border-radius:5px}
 .tag::placeholder{color:#fde}
 .q{font-style:italic;background:#f2f5fa;border:1px solid var(--ln);border-radius:8px;margin-top:10px}
@@ -152,7 +153,7 @@ function render(){
  <h3>២. ការវិភាគលទ្ធផលប្រចាំថ្ងៃ (Daily Performance Breakdown)</h3>
  <table><thead><tr><th>ចំណុចវិភាគ</th><th>ចំនួន</th><th>អត្រាបម្លែង (%)</th><th class="noprint"></th></tr></thead><tbody>`;
  S.bd.forEach((r,i)=>{h+=`<tr style="animation-delay:${i*.1}s"><td>${ta(`bd.${i}.n`)}</td><td>${inp(`bd.${i}.q`,'','c')}</td><td class="c"><b class="bp" data-i="${i}">${pct(num(r.q),tot).toFixed(1)}%</b></td><td class="noprint"><button class="x" onclick="del('bd',${i})">✕</button></td></tr>`});
- h+=`</tbody></table><button class="add noprint" onclick="add('bd')">+ បន្ថែមជួរ</button>
+ h+=`</tbody></table><div class="addf noprint"><input id="bdn" placeholder="ចំណុចវិភាគថ្មី (ឧ. Follow-up Leads)"><input id="bdq" type="number" min="0" placeholder="ចំនួន"><button onclick="addBd()">＋ Add</button></div>
  <h3>៣. ស្ថានភាព Pipeline តាមវគ្គសិក្សា (Sales Pipeline by Course)</h3>
  <table><thead><tr><th>វគ្គសិក្សា</th><th>ចំនួន Pipeline</th><th>ស្ថានភាព / កំណត់ចំណាំ</th><th class="noprint"></th></tr></thead><tbody>`;
  S.pl.forEach((r,i)=>{h+=`<tr style="animation-delay:${i*.1}s"><td>${ta(`pl.${i}.c`)}</td><td>${inp(`pl.${i}.n`,'','c')}</td><td>${ta(`pl.${i}.s`)}</td><td class="noprint"><button class="x" onclick="del('pl',${i})">✕</button></td></tr>`});
@@ -178,6 +179,7 @@ function recalc(){
  S.bd.forEach((r,i)=>{const e=document.querySelector(`.bp[data-i="${i}"]`);if(e)e.textContent=pct(num(r.q),tot).toFixed(1)+'%'})}
 const NEW={bd:()=>({n:'',q:'0'}),pl:()=>({c:'',n:'0',s:''}),meet:()=>'',ch:()=>({g:'បញ្ហាថ្មី',t:''})};
 function add(k){S[k].push(NEW[k]());save();render()}
+function addBd(){const n=$('bdn').value.trim();if(!n){$('bdn').focus();return}S.bd.push({n,q:$('bdq').value||'0'});save();render();$('bdn').focus()}
 function del(k,i){S[k].splice(i,1);save();render()}
 function resetAll(){if(confirm('Reset ទិន្នន័យទាំងអស់?')){S=JSON.parse(JSON.stringify(DEF));save();render()}}
 
