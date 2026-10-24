@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Sales Report System</title>
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Moul&display=swap" rel="stylesheet">
+<style>
+:root{--b:#1f4e9c;--b2:#2f6fd6;--bg:#eef3fb;--c:#fff;--t:#1d2433;--ln:#d5deee;--ok:#1a9a52;--bad:#d33}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Battambang','Noto Sans Khmer',sans-serif;background:var(--bg);color:var(--t)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes bg{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+@keyframes flo{50%{transform:translateY(-8px)}}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(120deg,#1f4e9c,#2f6fd6,#6aa0f5,#1f4e9c);background-size:300% 300%;animation:bg 10s ease infinite}
+.lc{background:#fff;padding:32px;border-radius:18px;width:min(360px,92vw);box-shadow:0 20px 50px #0004;animation:up .7s both}
+.lc .av{width:84px;height:84px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px;border:3px solid var(--b2);animation:flo 3s ease-in-out infinite}
+.lc h2{font-family:Moul;font-size:17px;text-align:center;color:var(--b);margin:0 0 18px}
+.lc input{width:100%;padding:11px;margin:6px 0;border:1px solid var(--ln);border-radius:9px;font:inherit}
+.lc .err{color:var(--bad);font-size:13px;min-height:18px;text-align:center}
+button,.btn{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:9px 15px;background:var(--b2);color:#fff;transition:.2s}
+button:hover,.btn:hover{transform:translateY(-2px);box-shadow:0 6px 14px #1f4e9c44}
+.lc button{width:100%;margin-top:6px}
+#app{display:none}
+.bar{position:sticky;top:0;z-index:5;background:#fff;box-shadow:0 2px 12px #0001;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 16px}
+.bar .av{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--b2);cursor:pointer;transition:.3s}
+.bar .av:hover{transform:rotate(12deg) scale(1.1)}
+.bar b{margin-right:auto;color:var(--b)}
+.g{background:#1a9a52}.o{background:#e07b13}.r{background:#777}
+#report{max-width:820px;margin:20px auto;background:var(--c);padding:26px;border-radius:14px;box-shadow:0 8px 30px #1f4e9c22;animation:up .6s both}
+.hd{text-align:center;margin-bottom:12px}
+.hd img{width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--b2)}
+.hd .ti{font-family:Moul;color:var(--b);font-size:20px}
+input,textarea{font:inherit;color:inherit;border:1px dashed transparent;background:transparent;border-radius:6px;padding:4px 6px;width:100%;transition:.2s}
+input:hover,textarea:hover{border-color:var(--ln);background:#f6f9ff}
+input:focus,textarea:focus{outline:0;border-color:var(--b2);background:#fff;box-shadow:0 0 0 3px #2f6fd622}
+textarea{resize:none;overflow:hidden}
+.c{text-align:center}
+h3{color:var(--b);font-size:16px;margin:22px 0 8px;animation:up .6s both}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--b);color:#fff;padding:9px;border:1px solid var(--b)}
+td{border:1px solid var(--ln);padding:4px;vertical-align:middle}
+tbody tr{transition:.2s;animation:up .5s both}
+tbody tr:hover{background:#eaf2ff}
+.pb{height:8px;background:#e3eaf7;border-radius:6px;overflow:hidden;margin:2px 6px}
+.pb i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#1a9a52);transition:width .8s}
+.x{background:#fde8e8;color:var(--bad);padding:2px 8px}
+.add{background:#e6efff;color:var(--b);margin-top:8px;padding:6px 12px}
+ul.l{list-style:none;padding:0;margin:0}
+ul.l li{display:flex;gap:6px;align-items:flex-start;padding:6px 8px;background:#f6f9ff;border-left:4px solid var(--b2);border-radius:6px;margin-bottom:6px;animation:up .5s both}
+.pr{background:#fff3f3;border-left-color:var(--bad)!important}
+.tag{width:150px;flex:none;font-size:12px;color:#fff;background:#e07b13;border-radius:5px}
+.tag::placeholder{color:#fde}
+.q{font-style:italic;background:#f2f5fa;border:1px solid var(--ln);border-radius:8px;margin-top:10px}
+@media print{body{background:#fff}.bar,.noprint,.add,.x{display:none!important}#report{box-shadow:none;margin:0;max-width:none;padding:0}input,textarea{border:0!important;background:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div id="login"><div class="lc">
+<img class="av" id="lav" alt="">
+<h2>ប្រព័ន្ធរបាយការណ៍លក់ប្រចាំថ្ងៃ</h2>
+<input id="u" placeholder="Username" autocomplete="off">
+<input id="p" type="password" placeholder="Password">
+<div class="err" id="err"></div>
+<button onclick="login()">ចូលប្រើប្រាស់ (Login)</button>
+</div></div>
+
+<div id="app">
+<div class="bar noprint">
+<img class="av" id="bav" title="ប្តូររូប Profile" onclick="pf.click()" alt="">
+<b>Daily Sales Report</b>
+<button onclick="pf.click()">🖼 ប្តូររូប Profile</button>
+<button class="g" onclick="window.print()">🖨 Print / PDF</button>
+<button class="o" onclick="docx()">📄 Docx</button>
+<button onclick="exportJson()">⬇ JSON</button>
+<button onclick="ij.click()">⬆ Import JSON</button>
+<button class="r" onclick="resetAll()">↺ Reset</button>
+<button class="r" onclick="logout()">Logout</button>
+<input type="file" id="pf" accept="image/*" hidden>
+<input type="file" id="ij" accept=".json" hidden>
+</div>
+<div id="report"></div>
+</div>
+
+<script>
+const DEF_AV='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2f6fd6"/><circle cx="50" cy="38" r="18" fill="#fff"/><path d="M14 92c4-26 68-26 72 0z" fill="#fff"/></svg>');
+const DEF={
+ avatar:'',
+ title:'របាយការណ៍លក់ប្រចាំថ្ងៃ (Daily Sales Report)',
+ org:'ក្រុមការលក់ និងប្រឹក្សាយោបល់ (ចំណែកផ្នែក)',
+ date:'កាលបរិច្ឆេទ៖ ថ្ងៃទី ... ខែ ... ឆ្នាំ ...',
+ kpi:[
+  {n:'ចំនួនទំនាក់ទំនង (Calls + Chats)',t:'100',a:'63',note:'63 ជា (New Lead)'},
+  {n:'ចំនួនបិទការលក់ (Closing Quantity)',t:'05',a:'0',note:''},
+  {n:'ចំណូល (Revenue)',t:'8500',a:'0',note:'',money:1}],
+ bd:[
+  {n:'Lead ដែលបានទាក់ទង (Total Contacted)',q:'63'},
+  {n:'Lead ថ្មី (New Leads)',q:'63'},
+  {n:'អតិថិជនមានសក្តានុពល (Qualified Leads)',q:'8'},
+  {n:'ចំនួនចុះឈ្មោះសរុប (Total Enroll)',q:'0'}],
+ pl:[
+  {c:'Full-Stack Web Developer',n:'10',s:'កំពុងតាមដាន / ទាក់ទង'},
+  {c:'Advanced Excel Best Practice',n:'8',s:'កំពុងតាមដាន / ទាក់ទង'},
+  {c:'Digital Marketing',n:'6',s:'កំពុងតាមដាន / ទាក់ទង'},
+  {c:'Graphic Design',n:'4',s:'កំពុងតាមដាន / ទាក់ទង'},
+  {c:'QuickBooks (សម្រាប់អាជីវកម្ម B2B)',n:'ម្នាក់ (1)',s:'មានអតិថិជនចាប់អារម្មណ៍'}],
+ meet:[
+  'ការកែលម្អដំណើរការលក់ (Sales Process & Consulting)៖ បន្ថែមតម្លៃទៅលើការប្រឹក្សា New Lead មុនបិទការលក់ (Value-driven)។',
+  'វិន័យនិងល្បឿនឆ្លើយតប (Discipline & Chat Response)៖ ត្រូវឆ្លើយតប Lead ឲ្យបានលឿន។',
+  'ការកាត់បន្ថយ Lead ជាប់គាំង (Overcoming Stagnant Leads)៖ ធ្វើ Follow-up ជាប្រចាំ។',
+  'ការលើកទឹកចិត្តក្រុម (Team Motivation)៖ ផ្តល់ Mini-Incentive ដើម្បីជំរុញឲ្យសម្រេច Target។'],
+ ch:[
+  {g:'បញ្ហាទី ១',t:'New Lead ចាប់អារម្មណ៍ក្នុងម៉ោងព្រឹក 7:00 - 8:30 ពេលដែលអ្នកទិញកំពុងដំណើរការធ្វើការ។'},
+  {g:'បញ្ហាទី ២',t:'អតិថិជនជាប់ម៉ោងសិក្សា Full Stack ពេលល្ងាច 1:00 - 4:00។'},
+  {g:'បញ្ហាទី ៣',t:'សិស្ស Walk-in ចូល Data Management ពេលល្ងាច 5:30 - 7:00។'},
+  {g:'សំណូមពរ (Suggestion)',t:'ផ្តល់ជូនអ្នកលក់នូវការគាំទ្រលើ Hybrid/Private ដើម្បីបិទការលក់បានលឿន។'}],
+ quote:'ក្រុមការលក់បានខិតខំប្រឹងប្រែងយ៉ាងខ្លាំងក្នុងការទាក់ទង Warm Leads ដើម្បីឈានទៅសម្រេច Target។'
+};
+let S=load();
+function load(){try{const x=localStorage.getItem('dsr');if(x)return JSON.parse(x)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
+function save(){try{localStorage.setItem('dsr',JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const num=v=>parseFloat(String(v).replace(/[^0-9.]/g,''))||0;
+const av=()=>S.avatar||DEF_AV;
+const fmt=(k,v)=>k.money?'$'+num(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):v;
+function pct(a,b){return b?Math.min(a/b*100,999):0}
+
+function login(){
+ if($('u').value==='Master_sale'&&$('p').value==='168M'){try{sessionStorage.setItem('ok','1')}catch(e){}enter()}
+ else $('err').textContent='ឈ្មោះអ្នកប្រើ ឬ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ'}
+function enter(){$('login').style.display='none';$('app').style.display='block';render()}
+function logout(){try{sessionStorage.removeItem('ok')}catch(e){}location.reload()}
+['u','p'].forEach(i=>$(i).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+
+function inp(path,ph,cls){return `<input class="${cls||''}" data-p="${path}" value="${esc(get(path))}" placeholder="${ph||''}">`}
+function get(p){return p.split('.').reduce((o,k)=>o?.[k],S)}
+function set(p,v){const k=p.split('.');const l=k.pop();k.reduce((o,x)=>o[x],S)[l]=v}
+function ta(path,cls){return `<textarea class="${cls||''}" rows="1" data-p="${path}">${esc(get(path))}</textarea>`}
+
+function render(){
+ $('lav').src=av();$('bav').src=av();
+ const tot=num(S.bd[0]?.q);
+ let h=`<div class="hd"><img src="${av()}" alt="">
+ ${ta('title','c ti')}${ta('org','c')}${ta('date','c')}</div>
+ <h3>១. ស្ថានភាពគោលដៅធៀបនឹងការអនុវត្តជាក់ស្តែង (Actual vs Target Metrics)</h3>
+ <table><thead><tr><th>សូចនាករ (KPIs)</th><th>គោលដៅ (Target)</th><th>ជាក់ស្តែង (Actual)</th><th>សម្រេចបាន (% Achieved)</th></tr></thead><tbody>`;
+ S.kpi.forEach((k,i)=>{const p=pct(num(k.a),num(k.t));
+  h+=`<tr style="animation-delay:${i*.1}s"><td>${ta(`kpi.${i}.n`)}</td><td>${inp(`kpi.${i}.t`,'','c')}</td><td>${inp(`kpi.${i}.a`,'','c')}</td>
+  <td class="c"><b class="pc" data-i="${i}" style="color:${p>=100?'var(--ok)':'var(--bad)'}">${p.toFixed(2)}%</b><div class="pb"><i data-i="${i}" style="width:${Math.min(p,100)}%"></i></div></td></tr>`});
+ h+=`</tbody></table>
+ <h3>២. ការវិភាគលទ្ធផលប្រចាំថ្ងៃ (Daily Performance Breakdown)</h3>
+ <table><thead><tr><th>ចំណុចវិភាគ</th><th>ចំនួន</th><th>អត្រាបម្លែង (%)</th><th class="noprint"></th></tr></thead><tbody>`;
+ S.bd.forEach((r,i)=>{h+=`<tr style="animation-delay:${i*.1}s"><td>${ta(`bd.${i}.n`)}</td><td>${inp(`bd.${i}.q`,'','c')}</td><td class="c"><b class="bp" data-i="${i}">${pct(num(r.q),tot).toFixed(1)}%</b></td><td class="noprint"><button class="x" onclick="del('bd',${i})">✕</button></td></tr>`});
+ h+=`</tbody></table><button class="add noprint" onclick="add('bd')">+ បន្ថែមជួរ</button>
+ <h3>៣. ស្ថានភាព Pipeline តាមវគ្គសិក្សា (Sales Pipeline by Course)</h3>
+ <table><thead><tr><th>វគ្គសិក្សា</th><th>ចំនួន Pipeline</th><th>ស្ថានភាព / កំណត់ចំណាំ</th><th class="noprint"></th></tr></thead><tbody>`;
+ S.pl.forEach((r,i)=>{h+=`<tr style="animation-delay:${i*.1}s"><td>${ta(`pl.${i}.c`)}</td><td>${inp(`pl.${i}.n`,'','c')}</td><td>${ta(`pl.${i}.s`)}</td><td class="noprint"><button class="x" onclick="del('pl',${i})">✕</button></td></tr>`});
+ h+=`</tbody></table><button class="add noprint" onclick="add('pl')">+ បន្ថែមវគ្គ</button>
+ <h3>៤. លទ្ធផលកិច្ចប្រជុំផ្ទៃក្នុងផ្នែកលក់ (Internal Sales Meeting Results)</h3><ul class="l">`;
+ S.meet.forEach((m,i)=>{h+=`<li style="animation-delay:${i*.1}s">•${ta(`meet.${i}`)}<button class="x noprint" onclick="del('meet',${i})">✕</button></li>`});
+ h+=`</ul><button class="add noprint" onclick="add('meet')">+ បន្ថែមចំណុច</button>
+ <h3>៥. បញ្ហាប្រឈមចំពោះមុខ និងដំណោះស្រាយបន្ទាប់ (Challenges & Bottlenecks)</h3><ul class="l">`;
+ S.ch.forEach((m,i)=>{h+=`<li class="${/ណូម|Sugg/.test(m.g)?'':'pr'}" style="animation-delay:${i*.1}s">${inp(`ch.${i}.g`,'ចំណងជើង','tag')}${ta(`ch.${i}.t`)}<button class="x noprint" onclick="del('ch',${i})">✕</button></li>`});
+ h+=`</ul><button class="add noprint" onclick="add('ch')">+ បន្ថែមបញ្ហា</button>${ta('quote','q')}`;
+ $('report').innerHTML=h;
+ document.querySelectorAll('textarea').forEach(grow);
+}
+function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
+document.addEventListener('input',e=>{
+ const t=e.target;if(!t.dataset?.p)return;
+ set(t.dataset.p,t.value);if(t.tagName==='TEXTAREA')grow(t);save();recalc()});
+function recalc(){
+ S.kpi.forEach((k,i)=>{const p=pct(num(k.a),num(k.t));
+  const e=document.querySelector(`.pc[data-i="${i}"]`),b=document.querySelector(`.pb i[data-i="${i}"]`);
+  if(e){e.textContent=p.toFixed(2)+'%';e.style.color=p>=100?'var(--ok)':'var(--bad)'}if(b)b.style.width=Math.min(p,100)+'%'});
+ const tot=num(S.bd[0]?.q);
+ S.bd.forEach((r,i)=>{const e=document.querySelector(`.bp[data-i="${i}"]`);if(e)e.textContent=pct(num(r.q),tot).toFixed(1)+'%'})}
+const NEW={bd:()=>({n:'',q:'0'}),pl:()=>({c:'',n:'0',s:''}),meet:()=>'',ch:()=>({g:'បញ្ហាថ្មី',t:''})};
+function add(k){S[k].push(NEW[k]());save();render()}
+function del(k,i){S[k].splice(i,1);save();render()}
+function resetAll(){if(confirm('Reset ទិន្នន័យទាំងអស់?')){S=JSON.parse(JSON.stringify(DEF));save();render()}}
+
+$('pf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=240;const x=c.getContext('2d');
+  const s=Math.min(im.width,im.height);x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,240,240);
+  S.avatar=c.toDataURL('image/jpeg',.85);save();render()};im.src=r.result};r.readAsDataURL(f)};
+function dl(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function exportJson(){dl('daily-sales-report.json',new Blob([JSON.stringify(S,null,2)],{type:'application/json'}))}
+$('ij').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{try{S=Object.assign(JSON.parse(JSON.stringify(DEF)),JSON.parse(r.result));save();render()}catch(x){alert('ឯកសារ JSON មិនត្រឹមត្រូវ')}};r.readAsText(f);e.target.value=''};
+function docx(){
+ const c=$('report').cloneNode(true);
+ c.querySelectorAll('.noprint,.add,.x,.pb').forEach(e=>e.remove());
+ c.querySelectorAll('input,textarea').forEach(e=>{const s=document.createElement('span');s.textContent=e.value??e.textContent;e.replaceWith(s)});
+ c.querySelectorAll('.hd img').forEach(i=>i.remove());
+ const css='body{font-family:"Khmer OS Battambang","Noto Sans Khmer",Arial}table{width:100%;border-collapse:collapse}th{background:#1f4e9c;color:#fff;padding:6px;border:1px solid #1f4e9c}td{border:1px solid #bbb;padding:5px}h3{color:#1f4e9c}.c{text-align:center}ul{list-style:none;padding:0}li{margin:5px 0}';
+ const html=`<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>${css}</style></head><body>${c.innerHTML}</body></html>`;
+ dl('daily-sales-report.docx',new Blob(['\ufeff',html],{type:'application/msword'}))}
+
+let ok=false;try{ok=sessionStorage.getItem('ok')==='1'}catch(e){}
+$('lav').src=av();
+if(ok)enter();
+</script>
+</body>
+</html>
